@@ -188,7 +188,7 @@ int main(int argc, char** argv){
 		if (isStraightFlush(pokerHand)) localStraightFlushes++;
 	}
 
-	finalizeData(&localStraightFlushes, &globalStraightFlushes, my_rank, cnt * processes);
+	finalizeData(&localStraightFlushes, &globalStraightFlushes, my_rank, cnt);
 
 	MPI_Finalize();
 	return 0;
