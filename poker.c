@@ -144,11 +144,12 @@ void calculateTrial(int* cnt, int rank, int processes) {
     *cnt = rank < remainder ? base + 1 : base;
 }
 
-void finalizeData(int* localStraightFlushes, int* globalStraightFlushes, int rank, int cnt) {
+void finalizeData(int* localStraightFlushes, int* globalStraightFlushes, int rank, int cnt, float time) {
 	MPI_Reduce(localStraightFlushes, globalStraightFlushes, 1, MPI_INT, MPI_SUM, 0, MPI_COMM_WORLD);
 	if (rank == 0) {
 		float percent = (float) *globalStraightFlushes / (float)cnt * 100.0;
 		printf("We found %d straight flushes out of %d hands or %f percent.\n", *globalStraightFlushes, cnt, percent);
+		prinftf("Ellapsed Time: %1.6f seconds", MPI_Wtime() - time);
 	}
 }
 
@@ -156,10 +157,13 @@ int main(int argc, char** argv){
 	// MPI Setup
 	int processes;
 	int my_rank;
+	double startTime;
 
 	MPI_Init(&argc, &argv);
 	MPI_Comm_size(MPI_COMM_WORLD, &processes);
 	MPI_Comm_rank(MPI_COMM_WORLD, &my_rank);
+
+	if (my_rank == 0) startTime = MPI_Wtime();
 
 	int localStraightFlushes = 0;
 	int globalStraightFlushes;
@@ -170,7 +174,6 @@ int main(int argc, char** argv){
 	getTotalTrials(&cnt, my_rank);
 	totalCnt = cnt;
 	calculateTrial(&cnt, my_rank, processes);
-	// getTotalTrials(&cnt); Old Way
 
 	for (int i=0;i<cnt;i++){
 		int cardCount=0;
@@ -187,7 +190,7 @@ int main(int argc, char** argv){
 		if (isStraightFlush(pokerHand)) localStraightFlushes++;
 	}
 
-	finalizeData(&localStraightFlushes, &globalStraightFlushes, my_rank, totalCnt);
+	finalizeData(&localStraightFlushes, &globalStraightFlushes, my_rank, totalCnt, startTime);
 
 	MPI_Finalize();
 	return 0;
