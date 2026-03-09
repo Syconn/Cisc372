@@ -149,7 +149,7 @@ void finalizeData(int* localStraightFlushes, int* globalStraightFlushes, int ran
 	if (rank == 0) {
 		float percent = (float) *globalStraightFlushes / (float)cnt * 100.0;
 		printf("We found %d straight flushes out of %d hands or %f percent.\n", *globalStraightFlushes, cnt, percent);
-		prinftf("Ellapsed Time: %1.6f seconds", MPI_Wtime() - time);
+		printf("Ellapsed Time: %1.6f seconds", MPI_Wtime() - time);
 	}
 }
 
