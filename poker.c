@@ -144,6 +144,11 @@ void makeStraightFlush3(Hand hand){
 	hand[4].suit=SPADES;
 }
 
+void getTotalTrials(int* cnt, int rank) {
+	if (rank == 0) getTotalTrials(cnt);
+	MPI_Bcast(cnt, 1, MPI_INT, 0, MPI_COMM_WORLD);
+}
+
 int main(int argc,char** argv){
 	// MPI Setup
 	int processes;
@@ -157,8 +162,11 @@ int main(int argc,char** argv){
 	float percent;
 	Hand pokerHand;
 	srand(time(0));
+
 	int cnt;
-	getTotalTrials(&cnt);
+	getTotalTrials(&cnt, my_rank); // New way
+	// getTotalTrials(&cnt); Old Way
+
 	for (int i=0;i<cnt;i++){
 		int cardCount=0;
 		while (cardCount<5){
