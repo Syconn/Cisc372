@@ -139,17 +139,25 @@ void getTotalTrials(int* cnt, int rank) {
 	MPI_Bcast(cnt, 1, MPI_INT, 0, MPI_COMM_WORLD);
 }
 
-int main(int argc,char** argv){
+void finalizeData(int* localStraightFlushes, int* globalStraightFlushes, int rank, int cnt) {
+	MPI_Reduce(&localStraightFlushes, &globalStraightFlushes, 1, MPI_INT, MPI_SUM, 0, MPI_COMM_WORLD);
+	if (rank == 0) {
+		float percent = (float) *globalStraightFlushes / (float)cnt * 100.0;
+		printf("We found %d straight flushes out of %d hands or %f percent.\n", globalStraightFlushes, cnt, percent);
+	}
+}
+
+int main(int argc, char** argv){
 	// MPI Setup
 	int processes;
 	int my_rank;
 
-	MPI_Init(NULL, NULL);
+	MPI_Init(&argc, &argv);
 	MPI_Comm_size(MPI_COMM_WORLD, &processes);
 	MPI_Comm_rank(MPI_COMM_WORLD, &my_rank);
 
-	int straightFlushes=0;
-	float percent;
+	int localStraightFlushes, globalStraightFlushes;
+	// float percent; Moved to helper
 	Hand pokerHand;
 	srand(time(0));
 
@@ -163,18 +171,16 @@ int main(int argc,char** argv){
 			Card card;
 			randomCard(&card);
 			if (!inHand(&card,pokerHand,cardCount)){
-				pokerHand[cardCount].rank=card.rank;
-				pokerHand[cardCount].suit=card.suit;
+				pokerHand[cardCount].rank = card.rank;
+				pokerHand[cardCount].suit = card.suit;
 				cardCount++;
 			}
 		}
 
-		if (isStraightFlush(pokerHand)) straightFlushes++;
+		if (isStraightFlush(pokerHand)) localStraightFlushes++;
 	}
 
-	percent=(float)straightFlushes/(float)cnt*100.0;
-
-	printf("We found %d straight flushes out of %d hands or %f percent.\n",straightFlushes,cnt,percent);
+	finalizeData(&localStraightFlushes, &globalStraightFlushes, my_rank, cnt * processes);
 
 	MPI_Finalize();
 	return 0;
