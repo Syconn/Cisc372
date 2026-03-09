@@ -139,8 +139,6 @@ void getTotalTrials(int* cnt, int rank) {
 	MPI_Bcast(cnt, 1, MPI_INT, 0, MPI_COMM_WORLD);
 }
 
-void 
-
 int main(int argc,char** argv){
 	// MPI Setup
 	int processes;
