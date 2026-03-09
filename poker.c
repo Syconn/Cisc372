@@ -24,12 +24,12 @@ void randomCard(Card* card){
 	card->suit=(SUIT)rand()%4;
 
 }
-/*getTotalTrials
+/*getTotalTrial - Renamed to Call Later
  * Description: Gets the total trials from the user and stores it in cnt
  * Arguments: cnt: an output variable to hold the selected number of trials
  * Returns: None
  */
- void getTotalTrials(int* cnt){
+ void getTotalTrial(int* cnt){
 	printf("Enter the number of trials:\n");
 	scanf("%d",cnt);
  }
@@ -145,7 +145,7 @@ void makeStraightFlush3(Hand hand){
 }
 
 void getTotalTrials(int* cnt, int rank) {
-	if (rank == 0) getTotalTrials(cnt);
+	if (rank == 0) getTotalTrial(cnt);
 	MPI_Bcast(cnt, 1, MPI_INT, 0, MPI_COMM_WORLD);
 }
 
