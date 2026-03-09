@@ -168,8 +168,9 @@ int main(int argc, char** argv){
 	Hand pokerHand;
 	srand(time(0));
 
-	int cnt;
+	int cnt, totalCnt;
 	getTotalTrials(&cnt, my_rank);
+	totalCnt = cnt;
 	calculateTrial(&cnt, my_rank, processes);
 	// getTotalTrials(&cnt); Old Way
 
@@ -188,7 +189,7 @@ int main(int argc, char** argv){
 		if (isStraightFlush(pokerHand)) localStraightFlushes++;
 	}
 
-	finalizeData(&localStraightFlushes, &globalStraightFlushes, my_rank, cnt);
+	finalizeData(&localStraightFlushes, &globalStraightFlushes, my_rank, totalCnt);
 
 	MPI_Finalize();
 	return 0;
