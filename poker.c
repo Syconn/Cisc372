@@ -139,6 +139,13 @@ void getTotalTrials(int* cnt, int rank) {
 	MPI_Bcast(cnt, 1, MPI_INT, 0, MPI_COMM_WORLD);
 }
 
+void calculateTrial(int* cnt, int rank, int processes) {
+	int total = *cnt;
+    int base = total / processes;
+    int remainder = total % processes;
+    *cnt = rank < remainder ? base + 1 : base;
+}
+
 void finalizeData(int* localStraightFlushes, int* globalStraightFlushes, int rank, int cnt) {
 	MPI_Reduce(localStraightFlushes, globalStraightFlushes, 1, MPI_INT, MPI_SUM, 0, MPI_COMM_WORLD);
 	if (rank == 0) {
@@ -162,7 +169,8 @@ int main(int argc, char** argv){
 	srand(time(0));
 
 	int cnt;
-	getTotalTrials(&cnt, my_rank); // New way
+	getTotalTrials(&cnt, my_rank);
+	calculateTrial(&cnt, my_rank, processes);
 	// getTotalTrials(&cnt); Old Way
 
 	for (int i=0;i<cnt;i++){
@@ -180,7 +188,6 @@ int main(int argc, char** argv){
 		if (isStraightFlush(pokerHand)) localStraightFlushes++;
 	}
 
-	printf("%d", localStraightFlushes);
 	finalizeData(&localStraightFlushes, &globalStraightFlushes, my_rank, cnt * processes);
 
 	MPI_Finalize();
