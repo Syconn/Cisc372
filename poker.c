@@ -168,7 +168,7 @@ int main(int argc, char** argv){
 	int localStraightFlushes = 0;
 	int globalStraightFlushes;
 	Hand pokerHand;
-	srand(time(0));
+	srand(time(NULL) + my_rank);
 
 	int cnt, totalCnt;
 	getTotalTrials(&cnt, my_rank);
