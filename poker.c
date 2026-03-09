@@ -143,7 +143,7 @@ void finalizeData(int* localStraightFlushes, int* globalStraightFlushes, int ran
 	MPI_Reduce(&localStraightFlushes, &globalStraightFlushes, 1, MPI_INT, MPI_SUM, 0, MPI_COMM_WORLD);
 	if (rank == 0) {
 		float percent = (float) *globalStraightFlushes / (float)cnt * 100.0;
-		printf("We found %d straight flushes out of %d hands or %f percent.\n", globalStraightFlushes, cnt, percent);
+		printf("We found %d straight flushes out of %d hands or %f percent.\n", *globalStraightFlushes, cnt, percent);
 	}
 }
 
