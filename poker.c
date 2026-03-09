@@ -193,7 +193,7 @@ int main(int argc, char** argv){
 
 	if (my_rank == 0) {
 		t2 = MPI_Wtime();
-		printf("Ellapsed Time: %f \n", t1 - t2);
+		printf("Ellapsed Time: %f \n", t2 - t1);
 	}
 
 	MPI_Finalize();
