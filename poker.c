@@ -42,10 +42,8 @@ void randomCard(Card* card){
  * Returns: non-zero if card is in the hand, zero otherwise
  */
 int inHand(Card* card, Hand hand,int cardCount){
-	for (int i=0;i<cardCount;i++){
-		if (card->rank==hand[i].rank && card->suit==hand[i].suit)
-			return -1;
-	}
+	for (int i=0;i<cardCount;i++)
+		if (card->rank==hand[i].rank && card->suit==hand[i].suit) return -1;
 	return 0;
 }
 
@@ -58,9 +56,7 @@ int isStraightFlush(Hand hand){
 	int swap;
 	//first check flush
 	SUIT suit=hand[0].suit;
-	for (int i=1;i<5;i++)
-		if (hand[i].suit!=suit)
-			return 0;
+	for (int i=1;i<5;i++) if (hand[i].suit!=suit) return 0;
 	for (int i=0;i<4;i++)
 		for (int j=0;j<4-i;j++){
 			if(hand[j].rank>hand[j+1].rank){
@@ -69,13 +65,7 @@ int isStraightFlush(Hand hand){
 			       hand[j+1].rank=swap;
 			}
 		}
-	if (hand[4].rank==hand[3].rank+1 && hand[3].rank==hand[2].rank+1 && hand[2].rank==hand[1].rank+1 && (hand[1].rank==hand[0].rank+1 || (hand[0].rank==1 && hand[4].rank==13))){
-#ifdef DEBUG
-		printf("is a straight flush\n");
-#endif
-		return -1;
-	}
-
+	if (hand[4].rank==hand[3].rank+1 && hand[3].rank==hand[2].rank+1 && hand[2].rank==hand[1].rank+1 && (hand[1].rank==hand[0].rank+1 || (hand[0].rank==1 && hand[4].rank==13))) return -1;
 	return 0;
 }
 
@@ -85,9 +75,9 @@ int isStraightFlush(Hand hand){
  * Returns: None
  */
 void printHand(Hand hand){
-		for (int i=0;i<5;i++)
-			printf("\t(%d of %s)",hand[i].rank,labels[hand[i].suit]);
-		printf("\n");
+	for (int i=0;i<5;i++)
+		printf("\t(%d of %s)",hand[i].rank,labels[hand[i].suit]);
+	printf("\n");
 }
 
 /*makeStraightFlush1
@@ -149,6 +139,8 @@ void getTotalTrials(int* cnt, int rank) {
 	MPI_Bcast(cnt, 1, MPI_INT, 0, MPI_COMM_WORLD);
 }
 
+void 
+
 int main(int argc,char** argv){
 	// MPI Setup
 	int processes;
@@ -178,12 +170,10 @@ int main(int argc,char** argv){
 				cardCount++;
 			}
 		}
-#ifdef DEBUG
-		printHand(pokerHand);
-#endif
-		if (isStraightFlush(pokerHand))
-			straightFlushes++;
+
+		if (isStraightFlush(pokerHand)) straightFlushes++;
 	}
+
 	percent=(float)straightFlushes/(float)cnt*100.0;
 
 	printf("We found %d straight flushes out of %d hands or %f percent.\n",straightFlushes,cnt,percent);
