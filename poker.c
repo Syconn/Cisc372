@@ -162,7 +162,7 @@ int main(int argc, char** argv){
 	MPI_Comm_size(MPI_COMM_WORLD, &processes);
 	MPI_Comm_rank(MPI_COMM_WORLD, &my_rank);
 
-	if (my_rank == 0) startTime = MPI_Wtime();
+	if (my_rank == 0) t1 = MPI_Wtime();
 
 	int localStraightFlushes = 0;
 	int globalStraightFlushes;
